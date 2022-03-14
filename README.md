@@ -3,7 +3,10 @@
 ---
 
 - #### [Spring Boot 환경 설정](#spring-boot-환경-설정)
+- #### [회원 관리 예제](#회원-관리-예제)
 - #### [스프링 웹 개발 기초](#스프링-웹-개발-기초)
+- #### [스프링 빈과 의존관계](#스프링-빈과-의존관계)
+- #### [스프링 DB 접근 기술](#스프링-db-접근-기술)
 
 # Spring Boot 환경 설정
 
@@ -38,20 +41,20 @@ dependencies {
 ### 스프링 부트 라이브러리
 
 1. spring-boot-starter-web
-   1. spring-boot-starter-tomcat: 톰캣 (웹서버)
-   2. spring-webmvc: 스프링 웹 MVC
+    1. spring-boot-starter-tomcat: 톰캣 (웹서버)
+    2. spring-webmvc: 스프링 웹 MVC
 2. spring-boot-starter-thymeleaf: 타임리프 템플릿 엔진(View)
 3. spring-boot-starter(공통): 스프링 부트 + 스프링 코어 + 로깅
-   1. spring-boot
-   - spring-core
-   2. spring-boot-starter-logging
-   - logback, slf4j
+    1. spring-boot
+    - spring-core
+    2. spring-boot-starter-logging
+    - logback, slf4j
 
 ### 테스트 라이브러리
 
 - spring-boot-starter-test
-  - junit : 테스트 프레임워크 (4에서 5로 넘어가고 있는 추세)
-  - spring-test : 스프링과 통합해서 테스트
+    - junit : 테스트 프레임워크 (4에서 5로 넘어가고 있는 추세)
+    - spring-test : 스프링과 통합해서 테스트
 
 ## 3. view 환경설정
 
@@ -63,7 +66,7 @@ dependencies {
 
 ### 동작 환경 (템플릿 엔진 이용)
 
-<img width="60%" src="https://user-images.githubusercontent.com/60567697/154985123-08e0843a-e315-42e5-8fe8-0efafb6cd3a3.png"/>
+<img width="70%" src="https://user-images.githubusercontent.com/60567697/154985123-08e0843a-e315-42e5-8fe8-0efafb6cd3a3.png"/>
 
 > Controller에서 return 값으로 문자를 반환 -> viewResolver가 "resources:templates/ +{ViewName}+ .html"을 찾음
 
@@ -77,13 +80,27 @@ dependencies {
 - 실행 X -> 2번에서 gradlew clean build
 - 인텔리제이의 포트 사용 종료
 
+#회원 관리 예제
+
+## 요구 사항
+- 데이터: 회원ID, 이름
+- 기능: 회원 등록, 조회
+- 아직 데이터 저장소가 선정되지 않음(가상의 시나리오)
+
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/158114699-f78d5882-8920-4d91-96ae-786af0998aeb.png"/>
+
+- 컨트롤러: 웹 MVC의 컨트롤러 역할
+- 서비스: 핵심 비즈니스 로직 구현
+- 리포지토리: 데이터베이스에 접근, 도메인 객체를 DB에 저장하고 관리
+- 도메인: 비즈니스 도메인 객체, 예) 회원, 주문, 쿠폰 등등 주로 데이터베이스에 저장하고 관리됨
+
 # 스프링 웹 개발 기초
 
 ## 1. 정적 컨텐츠
 
 > 정적 컨텐츠는 서버에서 하는 일 없이 파일을 바로 웹브라우저에 내려준다.
 
- <img width="60%" src ="https://user-images.githubusercontent.com/60567697/155275377-f6f0625f-31e0-4392-bbc2-bd13691738ba.png"/>
+ <img width="70%" src ="https://user-images.githubusercontent.com/60567697/155275377-f6f0625f-31e0-4392-bbc2-bd13691738ba.png"/>
 
 ### 다음 사진과 같이 hello-static.html을 바로 불러온다.
 
@@ -96,7 +113,7 @@ dependencies {
 > - view : 화면을 그림
 > - model, controller : 로직 및 내부적인 처리
 
- <img width="60%" src ="https://user-images.githubusercontent.com/60567697/155276156-f8ace19e-2ad6-45ec-a25c-957f6eb29a23.png"/>
+ <img width="70%" src ="https://user-images.githubusercontent.com/60567697/155276156-f8ace19e-2ad6-45ec-a25c-957f6eb29a23.png"/>
 
 ### html을 그대로 넘겨주지 않고 서버에서 프로그래밍해 동적으로 변경해서 전달한다.
 
@@ -106,7 +123,7 @@ dependencies {
 
 ### - String 전달
 
-#### view없이 넘겨받은 내용은 그래도 보여준다.
+#### view없이 넘겨받은 내용은 그대로 보여준다.
 
 <img width="40%" src ="https://cdn.inflearn.com/public/files/posts/e9d3c5ef-6203-41c2-b442-34c9f11df529/blob"/><img width="40%" src ="https://cdn.inflearn.com/public/files/posts/e208d415-f85a-4efb-ba39-06b3de612b02/blob"/>
 
@@ -118,10 +135,36 @@ dependencies {
 
 ### - @ResponseBody 사용원리
 
-<img width="60%" src ="https://user-images.githubusercontent.com/60567697/155277252-7826ab4d-5009-48dc-92b4-91085529c826.png"/>
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/155277252-7826ab4d-5009-48dc-92b4-91085529c826.png"/>
 
 - HTTP의 BODY에 문자 내용을 직접 반환
 - 컨트롤러에 @ResponseBody가 있으면 viewResolver에 넘기지 않고 그대로 데이터를 넘기기 위해 httpMessageConverter가 동작
 - 문자처리 : StringConverter
 - 객체처리 : MappingJackson2HttpMessageConverter
-  - Jackson-> 객체를 json으로 변경하는 라이브러리
+    - Jackson-> 객체를 json으로 변경하는 라이브러리
+
+# 스프링 빈과 의존관계
+> 스프링 빈   
+> : Spring IoC 컨테이너가 관리하는 자바 객체
+##1. 컴포넌트 스캔과 자동 의존관계 설정
+- 회원 컨트롤러가 회원서비스와 회원 리포지토리를 사용할 수 있게 의존관계를 준비
+1. 컴포넌트 스캔 방식
+   : 스프링이 생성될 때 컴포넌트 어노테이션이 있으면 스프링 빈으로 등록  
+   : @service, @repository에 @component 포함되어 있음
+
+3. 자동 의존관계 설정  
+   : @Autowired 사용 -> 생성자에 @Autowired 가 있으면 스프링이 연관된 객체를 스프링 컨테이너에서 찾아서 넣음  
+   : 이렇게 객체 의존관계를 외부에서 넣어주는 것이 의존성 주입 (DI,Dependency Injection)
+
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/158117170-b417dc85-421f-45be-9c49-64a5ed1ad487.png"/>  
+
+- 스프링 컨테이너에 스프링 빈을 등록할 때는 일반적으로 싱글톤으로 등록한다.
+
+## 2. 자바 코드로 직접 스프링 빈 등록하기
+- 회원 서비스와 회원 리포지토리의 @Service, @Repository, @Autowired 애노테이션을 제거하고
+  진행
+- @Configuration을 단 클래그에 직접 빈을 등록한다. 여기서는 SpringConfig가 해당된다.
+
+# 스프링 DB 접근 기술
+## 1. H2 데이터베이스 사용
+-  cmd에서 h2.bat을 이용해 실행
