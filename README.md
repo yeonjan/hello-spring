@@ -7,6 +7,7 @@
 - #### [스프링 웹 개발 기초](#스프링-웹-개발-기초)
 - #### [스프링 빈과 의존관계](#스프링-빈과-의존관계)
 - #### [스프링 DB 접근 기술](#스프링-db-접근-기술)
+- ####[AOP](#aop)
 
 # Spring Boot 환경 설정
 
@@ -41,20 +42,20 @@ dependencies {
 ### 스프링 부트 라이브러리
 
 1. spring-boot-starter-web
-    1. spring-boot-starter-tomcat: 톰캣 (웹서버)
-    2. spring-webmvc: 스프링 웹 MVC
+   1. spring-boot-starter-tomcat: 톰캣 (웹서버)
+   2. spring-webmvc: 스프링 웹 MVC
 2. spring-boot-starter-thymeleaf: 타임리프 템플릿 엔진(View)
 3. spring-boot-starter(공통): 스프링 부트 + 스프링 코어 + 로깅
-    1. spring-boot
-    - spring-core
-    2. spring-boot-starter-logging
-    - logback, slf4j
+   1. spring-boot
+   - spring-core
+   2. spring-boot-starter-logging
+   - logback, slf4j
 
 ### 테스트 라이브러리
 
 - spring-boot-starter-test
-    - junit : 테스트 프레임워크 (4에서 5로 넘어가고 있는 추세)
-    - spring-test : 스프링과 통합해서 테스트
+  - junit : 테스트 프레임워크 (4에서 5로 넘어가고 있는 추세)
+  - spring-test : 스프링과 통합해서 테스트
 
 ## 3. view 환경설정
 
@@ -141,30 +142,67 @@ dependencies {
 - 컨트롤러에 @ResponseBody가 있으면 viewResolver에 넘기지 않고 그대로 데이터를 넘기기 위해 httpMessageConverter가 동작
 - 문자처리 : StringConverter
 - 객체처리 : MappingJackson2HttpMessageConverter
-    - Jackson-> 객체를 json으로 변경하는 라이브러리
+  - Jackson-> 객체를 json으로 변경하는 라이브러리
 
 # 스프링 빈과 의존관계
 > 스프링 빈   
-> : Spring IoC 컨테이너가 관리하는 자바 객체
-##1. 컴포넌트 스캔과 자동 의존관계 설정
+> : Spring IoC 컨테이너가 관리하는 자바 객체  
+
+## 1. 컴포넌트 스캔과 자동 의존관계 설정
 - 회원 컨트롤러가 회원서비스와 회원 리포지토리를 사용할 수 있게 의존관계를 준비
 1. 컴포넌트 스캔 방식
-   : 스프링이 생성될 때 컴포넌트 어노테이션이 있으면 스프링 빈으로 등록  
-   : @service, @repository에 @component 포함되어 있음
+: 스프링이 생성될 때 컴포넌트 어노테이션이 있으면 스프링 빈으로 등록  
+: @service, @repository에 @component 포함되어 있음
 
 3. 자동 의존관계 설정  
-   : @Autowired 사용 -> 생성자에 @Autowired 가 있으면 스프링이 연관된 객체를 스프링 컨테이너에서 찾아서 넣음  
-   : 이렇게 객체 의존관계를 외부에서 넣어주는 것이 의존성 주입 (DI,Dependency Injection)
-
+: @Autowired 사용 -> 생성자에 @Autowired 가 있으면 스프링이 연관된 객체를 스프링 컨테이너에서 찾아서 넣음  
+: 이렇게 객체 의존관계를 외부에서 넣어주는 것이 의존성 주입 (DI,Dependency Injection)
+  
 <img width="70%" src ="https://user-images.githubusercontent.com/60567697/158117170-b417dc85-421f-45be-9c49-64a5ed1ad487.png"/>  
 
 - 스프링 컨테이너에 스프링 빈을 등록할 때는 일반적으로 싱글톤으로 등록한다.
 
-## 2. 자바 코드로 직접 스프링 빈 등록하기
+##2. 자바 코드로 직접 스프링 빈 등록하기
 - 회원 서비스와 회원 리포지토리의 @Service, @Repository, @Autowired 애노테이션을 제거하고
-  진행
+진행
 - @Configuration을 단 클래그에 직접 빈을 등록한다. 여기서는 SpringConfig가 해당된다.
 
 # 스프링 DB 접근 기술
 ## 1. H2 데이터베이스 사용
--  cmd에서 h2.bat을 이용해 실행
+cmd에서 h2.bat을 이용해 실행  
+
+## 2. Jdbc
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/158128472-084bbeee-cbd2-4f40-bdb4-8f53117132b9.png"/>  
+
+스프링의 DI (Dependencies Injection)을 사용하면 기존 코드를 전혀 손대지 않고, 설정만으로 구현
+클래스를 변경 가능.
+
+## 3. Jdbc Template
+- 순수 Jdbc와 동일한 환경설정
+- 스프링 JdbcTemplate과 MyBatis 같은 라이브러리는 JDBC API에서 본 반복 코드를 대부분
+제거. 하지만 SQL은 직접 작성.  
+
+## 4. JPA  
+- JPA는 기존의 반복 코드는 물론이고, 기본적인 SQL도 JPA가 직접 만들어서 실행.
+- JPA를 사용하면, SQL과 데이터 중심의 설계에서 객체 중심의 설계로 패러다임 전환 가능.
+- JPA를 사용하면 개발 생산성 향상 가능.
+- 
+## 5. 스프링 데이터 JPA  
+-> 추가 학습 필요
+
+# AOP
+## 1. AOP가 필요한 상황  
+> AOP: Aspect Oriented Programming
+- 메소드의 호출 시간을 측정하고자 할 때 사용
+- 공통 관심 사항(cross-cutting concern) vs 핵심 관심 사항(core concern) 분리  
+
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/158133793-57281532-1332-4a67-aaf1-d49d8804a9d0.png"/> 
+
+## 2. AOP 동작방식
+- AOP 적용 전  
+
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/158134261-b2dcd251-36df-4224-a0f0-4c30bb228651.png"/>   
+
+- AOP 적용 후  
+
+<img width="70%" src ="https://user-images.githubusercontent.com/60567697/158134555-b89ee90e-5212-429c-aa4e-41fc9fea7a00.png"/>   
