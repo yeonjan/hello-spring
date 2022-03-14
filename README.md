@@ -97,7 +97,7 @@ dependencies {
 - 실행 X -> 2번에서 gradlew clean build
 - 인텔리제이의 포트 사용 종료
 
-#회원 관리 예제
+# 회원 관리 예제
 
 ## 요구 사항
 - 데이터: 회원ID, 이름
